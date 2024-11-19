@@ -20,18 +20,34 @@ const socketService = (io: Server) => {
           console.log('Manual disconnect requested', socket.id);
           socket.disconnect();
         });
-    
-        socket.on('message', async (data) => {
-          console.log(data);
-          socket.to("some room").emit('message-receive', data);
+
+        //Funció per enviar el missatge i la data
+        socket.on('message', async (data: string) => {
+          const messageSchema: { 
+            date: Date; message: string 
+          } = {
+            date: new Date(), 
+            message: data 
+          }
+          console.log(messageSchema);
+          socket.to("some room").emit('message-receive', messageSchema);
         });
     
         socket.on('sendMessage', async (data) => {
-    
-          
-          io.to("some room").emit('message-receive', data);
+          const messageSchema: { 
+            date: Date; message: string 
+          } = {
+            date: new Date(), 
+            message: data 
+          }
+          console.log(messageSchema)
+          io.to("some room").emit('message-receive', messageSchema);
         });
+
       });
+
+
+      
 };
 
 export default socketService;
